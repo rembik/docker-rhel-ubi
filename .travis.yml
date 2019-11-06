@@ -1,3 +1,4 @@
+language: generic
 sudo: required
 services:
   - docker
@@ -10,16 +11,15 @@ env:
     - RHEL_UBI_VERSION="7" RHEL_UBI_IMAGE="registry.redhat.io/ubi7/ubi:latest" RHEL_UBI_LATEST=false
     - RHEL_UBI_VERSION="8" RHEL_UBI_IMAGE="registry.redhat.io/ubi8/ubi:latest" RHEL_UBI_LATEST=true
 
-# before_script:
-  # - docker pull "$RHEL_UBI_IMAGE" || true
-# script:
+before_script:
+  - docker pull "$RHEL_UBI_IMAGE" || true
+script:
   # - docker build --pull --cache-from "$RHEL_UBI_IMAGE" --tag "$DOCKER_IMAGE_NAME" .
   # - docker run "$DOCKER_IMAGE_NAME"
-# after_script:
+after_script:
   # - docker images
 
 before_deploy:
-  - docker pull "$RHEL_UBI_IMAGE" || true
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
   - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:latest" ; fi'
