@@ -13,16 +13,16 @@ env:
 before_script:
   - docker pull "$RHEL_UBI_IMAGE" || true
 script:
-  - docker build --pull --cache-from "$RHEL_UBI_IMAGE" --tag "$DOCKER_IMAGE_NAME" .
-  - docker run "$DOCKER_IMAGE_NAME"
+  # - docker build --pull --cache-from "$RHEL_UBI_IMAGE" --tag "$DOCKER_IMAGE_NAME" .
+  # - docker run "$DOCKER_IMAGE_NAME"
 
 after_script:
-  - docker images
+  # - docker images
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker tag "$DOCKER_IMAGE_NAME" "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
-  - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker tag "$DOCKER_IMAGE_NAME" "${DOCKER_IMAGE_NAME}:latest" ; fi'
+  - docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
+  - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:latest" ; fi'
 deploy:
   provider: script
   script:
