@@ -12,9 +12,8 @@ env:
     - RHEL_UBI_VERSION="8" RHEL_UBI_IMAGE="registry.access.redhat.com/ubi8/ubi:latest" RHEL_UBI_LATEST=true
 
 before_script:
-  # - docker pull "${RHEL_UBI_IMAGE}" || true
-script:
   - docker pull "${RHEL_UBI_IMAGE}" || true
+script:
   # - docker build --pull --cache-from "$RHEL_UBI_IMAGE" --tag "$DOCKER_IMAGE_NAME" .
   # - docker run "$DOCKER_IMAGE_NAME"
 after_script:
@@ -26,8 +25,10 @@ before_deploy:
   - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:latest" ; fi'
 deploy:
   provider: script
-  script:
-    - docker push "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
-    - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker push "${DOCKER_IMAGE_NAME}:latest" ; fi'
+  script: docker push "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
+  on:
+    branch: master
+  provider: script
+  script: 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker push "${DOCKER_IMAGE_NAME}:latest" ; fi'
   on:
     branch: master
