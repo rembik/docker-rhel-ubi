@@ -24,11 +24,11 @@ before_deploy:
   - docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
   - 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker tag "$RHEL_UBI_IMAGE" "${DOCKER_IMAGE_NAME}:latest" ; fi'
 deploy:
-  provider: script
-  script: docker push "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
-  on:
-    branch: master
-  provider: script
-  script: 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker push "${DOCKER_IMAGE_NAME}:latest" ; fi'
-  on:
-    branch: master
+  - provider: script
+    script: docker push "${DOCKER_IMAGE_NAME}:${RHEL_UBI_VERSION}"
+    on:
+      branch: master
+  - provider: script
+    script: 'if [ "{env:RHEL_UBI_LATEST:true}" ]; then docker push "${DOCKER_IMAGE_NAME}:latest" ; fi'
+    on:
+      branch: master
