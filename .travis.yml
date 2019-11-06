@@ -8,16 +8,16 @@ env:
     - DOCKER_USERNAME=rembik
     # DOCKER_PASSWORD=...
   matrix:
-    - RHEL_UBI_VERSION="7" RHEL_UBI_IMAGE="registry.redhat.io/ubi7/ubi:latest" RHEL_UBI_LATEST=false
-    - RHEL_UBI_VERSION="8" RHEL_UBI_IMAGE="registry.redhat.io/ubi8/ubi:latest" RHEL_UBI_LATEST=true
+    - RHEL_UBI_VERSION="7" RHEL_UBI_IMAGE="registry.redhat.io/ubi7/ubi" RHEL_UBI_LATEST=false
+    - RHEL_UBI_VERSION="8" RHEL_UBI_IMAGE="registry.redhat.io/ubi8/ubi" RHEL_UBI_LATEST=true
 
 before_script:
-  - docker pull "$RHEL_UBI_IMAGE" || true
+  - docker pull "$RHEL_UBI_IMAGE:latest" || true
 script:
   # - docker build --pull --cache-from "$RHEL_UBI_IMAGE" --tag "$DOCKER_IMAGE_NAME" .
   # - docker run "$DOCKER_IMAGE_NAME"
 after_script:
-  # - docker images
+  - docker images
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
